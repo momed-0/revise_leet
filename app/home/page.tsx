@@ -7,6 +7,7 @@ import ProblemsProvider from "@/components/ProblemsProvider";
 import TagsProvider from "@/components/TagsProvider";
 import { fetchSubmissionsForDay } from "@/components/fetchSubmissions";
 import DatePicker from "@/components/ui/datePicker";
+import SlugDropdown from "@/components/slugDropDown"
 
 const HomePage = () => {
     const dispatch = useDispatch();
@@ -25,7 +26,10 @@ const HomePage = () => {
     <div className="max-w-screen-xl mx-auto py-10 lg:py-16 px-6 xl:px-0 flex flex-col lg:flex-row items-start gap-12">
       <div>
         <h2 className="text-3xl font-bold tracking-tight">Problems</h2>
-        <DatePicker selectedDate={selectedDate} onDateChange={setSelectedDate} />
+        <div className="flex flex-wrap">
+          <SlugDropdown />
+          <DatePicker selectedDate={selectedDate} onDateChange={setSelectedDate} />
+        </div>
         <ProblemsProvider />
       </div>
       <TagsProvider />

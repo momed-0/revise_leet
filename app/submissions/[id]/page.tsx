@@ -16,7 +16,7 @@ const SubmissionDetails = () => {
     }
 
     return (
-        <div className="max-w-screen-md mx-auto py-10 px-6">
+        <div className="w-screen-md mx-auto py-10 px-6">
             <h1 className="text-3xl font-bold">{submission.title}</h1>
             <div
                 className="mt-2 text-muted-foreground"

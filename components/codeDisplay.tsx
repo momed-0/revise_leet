@@ -8,7 +8,7 @@ type CodeDisplayProps = {
 
   const CodeDisplay = ({ code, language = "cpp" }: CodeDisplayProps) => {
     return (
-      <div className="mt-6 bg-gray-100 p-4 rounded">
+      <div className="mt-6 bg-gray-100 rounded max-h-[700px] overflow-auto w-full">
         <SyntaxHighlighter language={language} style={oneDark} showLineNumbers>
           {code}
         </SyntaxHighlighter>

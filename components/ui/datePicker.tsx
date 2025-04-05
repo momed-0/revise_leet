@@ -17,9 +17,9 @@ const DatePicker = ({ selectedDate, onDateChange }: DatePickerProps) => {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
-          className="w-full text-left text-sm font-medium rounded-md border border-gray-300 bg-white px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          className="text-left text-sm font-medium rounded-md border border-gray-300 bg-white px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
         >
-          {selectedDate ? format(selectedDate, "yyyy-MM-dd") : "Select a date"}
+          {selectedDate ? format(selectedDate, "dd-MM-yyyy") : "Select a date"}
         </button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">

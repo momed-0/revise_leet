@@ -6,10 +6,17 @@ import { Calendar} from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import Link from "next/link";
+import EmptyPage from "./empty-page";
 
 export default function ProblemsProvider() {
     const submissions = useSelector((state: RootState) => state.submissions.submissions);
-    
+    if (submissions.length === 0) {
+      // Render an empty state if no submissions are available
+      return (
+        <EmptyPage text="Try selecting a different date or searching for a specific problem."/>
+      );
+    }
+  
     return (
         <div className="mt-4 space-y-12">
             

@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useParams } from "next/navigation";
 import { RootState } from "@/store/store";
 import CodeDisplay from "@/components/codeDisplay";
+import EmptyPage from "@/components/empty-page";
 
 const SubmissionDetails = () => {
     const { slug } = useParams(); // Get the dynamic route parameter
@@ -12,7 +13,7 @@ const SubmissionDetails = () => {
     const submission = submissions.find((sub) => sub.question_slug === slug);
 
     if (!submission) {
-        return <div>Submission not found</div>;
+        return <EmptyPage text="No submission found for this question." />;
     }
 
     return (

@@ -2,7 +2,7 @@ export default function EmptyPage({text}: {text: string}) {
     return (
         <div className="flex flex-col items-center justify-center mt-20">
           <img
-            src="./nothing.svg" // Replace with your empty state illustration
+            src="/nothing.svg" 
             alt="No Submissions"
             className="w-64 h-64"
           />

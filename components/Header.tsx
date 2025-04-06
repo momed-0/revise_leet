@@ -24,13 +24,13 @@ export default function Header() {
 
       <div className="flex items-center gap-2">
         {!hideBackButton && (
-           <button onClick={handleBack} className="text-gray-600 hover:text-black transition">
+           <button onClick={handleBack} className="text-gray-600 hover:text-black transition flex items-center">
            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
-               <path strokeLinecap="round" stroke-linejoin="round" stroke-width="1" d="M7 16l-4-4m0 0l4-4m-4 4h18">
-               </path>
+             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
            </svg>
            <span className="ml-1 font-bold text-lg">Back</span>
-         </button>  
+         </button>
+         
         )}
       </div>
       {

@@ -14,7 +14,16 @@ const SubmissionDetails = () => {
     const submission = submissions.find((sub) => sub.question_slug === slug);
 
     if (!submission) {
-        return <EmptyPage text="No submission found for this question." />;
+        return (
+            <div className="w-screen-md mx-auto py-10 px-6">
+                <div className="mb-6 flex justify-start">
+                    <div className="border border-gray-300 bg-white text-sm rounded shadow-sm hover:border-gray-400 transition">
+                        <SlugDropdown />
+                    </div>
+                </div>
+                <EmptyPage text="No submission found for this question." />;
+             </div>
+        )
     }
 
     return (
@@ -24,6 +33,7 @@ const SubmissionDetails = () => {
                     <SlugDropdown />
                 </div>
              </div>
+            
             <h1 className="text-3xl font-bold">{submission.title}</h1>
             <TagEditor slug={submission.question_slug} initialTags={submission.tags} />
             <div

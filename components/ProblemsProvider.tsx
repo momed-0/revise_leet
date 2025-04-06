@@ -18,40 +18,42 @@ export default function ProblemsProvider() {
     }
   
     return (
-        <div className="mt-4 space-y-12">
-            
-        {submissions.map((submission) => (
-          <Card
-            key={submission.submission_id}
-            className="flex flex-col sm:flex-row sm:items-center shadow-none overflow-hidden rounded-md border-none"
-          >
-            <CardHeader className="px-0 sm:p-0">
-              <div className="aspect-video sm:w-56 sm:aspect-square bg-muted rounded-lg" />
-            </CardHeader>
-            <CardContent className="px-0 sm:px-6 py-0 flex flex-col">
-              <div className="flex items-center gap-6">
-                <Badge className="bg-primary/5 text-primary hover:bg-primary/5 shadow-none">
-                  Technology
-                </Badge>
-              </div>
-
-              <h3 className="mt-4 text-2xl font-semibold tracking-tight">
-                <Link href={`/submissions/${submission.question_slug}`}>
-                    {submission.title}
-                </Link>
-              </h3>
-              <div
-                className="mt-2 text-muted-foreground line-clamp-3 text-ellipsis"
-                dangerouslySetInnerHTML={{ __html: submission.description?.slice(0, 300) || "" }}
-                />
-              <div className="mt-4 flex items-center gap-6 text-muted-foreground text-sm font-medium">
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" /> {submission.submitted_at.split("T")[0]}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+      {submissions.map((submission) => (
+        <Card
+          key={submission.submission_id}
+          className="shadow-sm bg-muted/40 hover:bg-muted/50 transition-colors duration-200 overflow-hidden rounded-xl border border-muted-foreground/10"
+        >
+          <CardHeader className="px-0 sm:px-0">
+            <div className="aspect-video bg-muted rounded-t-xl" />
+          </CardHeader>
+    
+          <CardContent className="p-4 flex flex-col">
+            <div className="flex items-center gap-2 mb-2">
+              <Badge className="bg-primary/10 text-primary">Technology</Badge>
+            </div>
+    
+            <h3 className="text-xl font-semibold tracking-tight mb-2">
+              <Link href={`/submissions/${submission.question_slug}`}>
+                {submission.title}
+              </Link>
+            </h3>
+    
+            <div
+              className="text-sm text-muted-foreground line-clamp-3"
+              dangerouslySetInnerHTML={{
+                __html: submission.description?.slice(0, 300) || "",
+              }}
+            />
+    
+            <div className="mt-4 text-xs text-muted-foreground flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              {submission.submitted_at.split("T")[0]}
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+    
     )
 }

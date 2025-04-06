@@ -13,6 +13,7 @@ export async function fetchSubmissionsForDay(targetDate: string) {
       code,
       submitted_at,
       leetcode_questions (
+        slug,
         title,
         description
       )
@@ -29,6 +30,7 @@ export async function fetchSubmissionsForDay(targetDate: string) {
   return (data ?? []).map((item: any) => ({
     submission_id: item.submission_id,
     code: item.code,
+    question_slug: item.leetcode_questions?.slug,
     submitted_at: item.submitted_at,
     title: item.leetcode_questions?.title,
     description: item.leetcode_questions?.description,

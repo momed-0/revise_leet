@@ -29,7 +29,7 @@ export default function ProblemsProvider() {
               </div>
 
               <h3 className="mt-4 text-2xl font-semibold tracking-tight">
-                <Link href={`/submissions/${submission.submission_id}`}>
+                <Link href={`/submissions/${submission.question_slug}`}>
                     {submission.title}
                 </Link>
               </h3>

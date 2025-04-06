@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 type Submission = {
     submission_id: number;
     code: string;
+    question_slug: string;
     submitted_at: string;
     title?: string;
     description?: string;

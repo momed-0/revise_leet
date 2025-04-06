@@ -6,10 +6,10 @@ import { RootState } from "@/store/store";
 import CodeDisplay from "@/components/codeDisplay";
 
 const SubmissionDetails = () => {
-    const { id } = useParams(); // Get the dynamic route parameter
+    const { slug } = useParams(); // Get the dynamic route parameter
     const submissions = useSelector((state: RootState) => state.submissions.submissions);
 
-    const submission = submissions.find((sub) => sub.submission_id === Number(id));
+    const submission = submissions.find((sub) => sub.question_slug === slug);
 
     if (!submission) {
         return <div>Submission not found</div>;

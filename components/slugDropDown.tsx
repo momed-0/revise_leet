@@ -19,7 +19,16 @@ export default function SlugDropdown() {
     const [fetched, setFetched] = useState(false)
 
     const supabase = createClient()
-
+    const fetchTags = async (slug: string) => {
+      const {data, error} = await supabase
+        .from('question_tags')
+        .select('tags')
+        .eq('slug', slug)
+        if( error) {
+          console.error('Error trying to fetch tags:',error)
+        }
+        return data
+    }
     const fetchItems = async () => {
       if (fetched || loading) return
       setLoading(true)
@@ -53,14 +62,20 @@ export default function SlugDropdown() {
         if (error) {
             console.error("Error trying to fetch solution:", error)
         } else {
-            let flattenedData = (data ?? []).map((item: any) => ({
-                submission_id: item.submission_id,
-                code: item.code,
-                question_slug: item.leetcode_questions?.slug,
-                submitted_at: item.submitted_at,
-                title: item.leetcode_questions?.title,
-                description: item.leetcode_questions?.description,
-              }));
+            let flattenedData = await Promise.all(
+              (data ?? []).map(async (item: any) => {
+                const tagsData = await fetchTags(item.leetcode_questions?.slug);
+                return {
+                  submission_id: item.submission_id,
+                  code: item.code,
+                  question_slug: item.leetcode_questions?.slug,
+                  tags: tagsData?.map(tag => tag.tags) || [],
+                  submitted_at: item.submitted_at,
+                  title: item.leetcode_questions?.title,
+                  description: item.leetcode_questions?.description,
+                };
+              })
+            );
             dispatch(setSubmissions(flattenedData)); // changed the context to this elected data
             router.push(`/submissions/${flattenedData[0]?.question_slug}`); // Redirect to submission details
         }

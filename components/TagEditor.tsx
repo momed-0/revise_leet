@@ -8,12 +8,14 @@ import { createClient } from "@/utils/supabase/client"
 
 export default function TagEditor({ slug, initialTags = [] }: { slug: string, initialTags: string[] }) {
     const supabase = createClient()
-    const [tags, setTags] = useState<string[]>(initialTags);
+    const [tags, setTags] = useState<string[]>(Array.isArray(initialTags) ? initialTags.flat() : []);
     const [newTag, setNewTag] = useState("");
+    const [showInput, setShowInput] = useState(false);
 
     const addTag = async () => {
-        if(newTag.trim() && !tags.includes(newTag)) {
-            const updatedTags = [...tags, newTag.trim()];
+        const tag = newTag.trim();
+        if(tag && !tags.includes(tag)) {
+            const updatedTags = [...tags, tag];
             setTags(updatedTags)
             // Update if exists or else insert
             const { error } = await supabase
@@ -22,8 +24,9 @@ export default function TagEditor({ slug, initialTags = [] }: { slug: string, in
             if (error) {
                 console.error("Error trying to update tags: ", error)
             }
-            setNewTag("") // clear the input
         }
+        setNewTag("") // clear the input
+        setShowInput(false);
     }
     const removeTag = async (tagToRemove: string) => {
         // remove that tag from state
@@ -50,19 +53,45 @@ export default function TagEditor({ slug, initialTags = [] }: { slug: string, in
         }
     }
     return (
-        <div className="flex flex-wrap gap-1 mb-2">
+        <div className="flex flex-wrap items-center gap-2 mb-4">
             {tags.map(tag => (
-                <Badge key={tag} onClick={() => removeTag(tag)} className="cursor-pointer">
-                {tag} ✕
+                <Badge 
+                    key={tag} 
+                    className="pr-1 pl-2 text-sm bg-muted text-muted-foreground flex items-center gap-1"
+                >
+                    {tag} 
+                    <span 
+                        onClick={() => removeTag(tag)}
+                        className="ml-1 cursor-pointer hover:text-destructive"
+                    >✕</span>
               </Badge>
             ))}
-            <Input
-                value={newTag}
-                onChange={e => setNewTag(e.target.value)}
-                onKeyDown={e => e.key === "Enter" && addTag()}
-                placeholder="Add tag"
-                className="w-auto"
-            />
+            {showInput ? (
+                <Input
+                    value={newTag}
+                    autoFocus
+                    onChange={e => setNewTag(e.target.value)}
+                    onKeyDown={e => {
+                        if (e.key === "Enter") addTag();
+                        if (e.key === "Escape") {
+                            setShowInput(false);
+                            setNewTag("");
+                        }
+                    }}
+                    onBlur={addTag}
+                    placeholder="Add tag"
+                    className="w-28 h-8 text-sm"
+                />
+            ) : (
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowInput(true)}
+                    className="text-muted-foreground h-8 px-2"
+                >
+                    + Add tag
+                </Button>
+            )}
         </div>
     )
 }

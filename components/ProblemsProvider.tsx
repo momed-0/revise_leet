@@ -16,7 +16,7 @@ export default function ProblemsProvider() {
         <EmptyPage text="Try selecting a different date or searching for a specific problem."/>
       );
     }
-  
+    
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
       {submissions.map((submission) => (
@@ -30,7 +30,9 @@ export default function ProblemsProvider() {
     
           <CardContent className="p-4 flex flex-col">
             <div className="flex items-center gap-2 mb-2">
-              <Badge className="bg-primary/10 text-primary">Technology</Badge>
+              {submission.tags && submission.tags.flat().map(tag => (
+                  <Badge key={tag} className="bg-primary/10 text-primary">{tag}</Badge>
+              ))}
             </div>
     
             <h3 className="text-xl font-semibold tracking-tight mb-2">

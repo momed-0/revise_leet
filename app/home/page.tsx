@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setSubmissions } from "@/store/submissionsSlice";
 import ProblemsProvider from "@/components/ProblemsProvider";
-import TagsProvider from "@/components/TagsProvider";
 import { fetchSubmissionsForDay } from "@/components/fetchSubmissions";
 import DatePicker from "@/components/ui/datePicker";
 import SlugDropdown from "@/components/slugDropDown"

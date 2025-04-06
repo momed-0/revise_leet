@@ -83,7 +83,7 @@ export default function SlugDropdown() {
     return (
       <Select onOpenChange={(open) => open && fetchItems()} onValueChange={handleSelect}>
         <SelectTrigger className="w-[300px]">
-          <SelectValue placeholder={loading ? "Loading..." : "Select a title"} />
+          <SelectValue placeholder={loading ? "Loading..." : "Select a question"} />
         </SelectTrigger>
         <SelectContent>
           {questions.map((item) => (

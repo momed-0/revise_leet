@@ -5,6 +5,7 @@ import { setSubmissions } from "@/store/submissionsSlice";
 import { createClient } from "@/utils/supabase/client"
 import { useRouter } from "next/navigation";
 
+
 type Question = {
     slug: string
     title: string
@@ -39,7 +40,9 @@ export default function SlugDropdown() {
       if (error) {
         console.error("Error fetching:", error)
       } else {
-        setQuestions(data as Question[])
+        // sort the questions in ascending order
+        const sortedQuestions = (data as Question[]).sort((a, b) => a.title.localeCompare(b.title));
+        setQuestions(sortedQuestions)
         setFetched(true)
       }
   

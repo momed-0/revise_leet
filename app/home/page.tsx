@@ -13,9 +13,9 @@ const HomePage = () => {
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date()); // Default to today
 
     useEffect(() => {
-      if (selectedDate) {
+      if (selectedDate) { // set the submissions state in the store
         const formattedDate = selectedDate.toISOString().split("T")[0];
-        fetchSubmissionsForDay(formattedDate).then((data) => {
+        fetchSubmissionsForDay(formattedDate, dispatch).then((data) => {
           dispatch(setSubmissions(data));
         });
       }

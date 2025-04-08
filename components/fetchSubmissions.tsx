@@ -1,6 +1,8 @@
-import { createClient } from '@/utils/supabase/client'
+import { createClient } from '@/utils/supabase/client';
+import { updateCurrentTags} from "@/store/submissionsSlice";
 
 const supabase = createClient();
+
 const fetchTags = async (slug: string) => {
   const {data, error} = await supabase
     .from('question_tags')
@@ -8,11 +10,12 @@ const fetchTags = async (slug: string) => {
     .eq('slug', slug)
     if( error) {
       console.error('Error trying to fetch tags:',error)
+      return [];
     }
 
-    return data
+    return data?.[0]?.tags || [];
 }
-export async function fetchSubmissionsForDay(targetDate: string) {
+export async function fetchSubmissionsForDay(targetDate: string, dispatch: any) {
   const startOfDay = `${targetDate}T00:00:00`;
   const endOfDay = `${targetDate}T23:59:59`;
 
@@ -37,19 +40,26 @@ export async function fetchSubmissionsForDay(targetDate: string) {
     return [];
   }
   // flatten data structure
+  const currentTags = new Map<string, number>();
   let flattenedData = await Promise.all(
     (data ?? []).map(async (item: any) => {
-      const tagsData = await fetchTags(item.leetcode_questions?.slug);
+      const tags = await fetchTags(item.leetcode_questions?.slug);
+      tags.forEach((tag: string) => {
+        currentTags.set(tag, (currentTags.get(tag) ?? 0) + 1)
+      });
+
       return {
         submission_id: item.submission_id,
         code: item.code,
         question_slug: item.leetcode_questions?.slug,
-        tags: tagsData?.map(tag => tag.tags) || [],
+        tags: tags,
         submitted_at: item.submitted_at,
         title: item.leetcode_questions?.title,
         description: item.leetcode_questions?.description,
       };
     })
   );
+  // dispatch the current tags to the redux store
+  dispatch(updateCurrentTags(Array.from(currentTags, ([tag, count]) => ({ tag, count }) )));
   return flattenedData;
 }

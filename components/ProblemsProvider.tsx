@@ -10,7 +10,7 @@ import EmptyPage from "./empty-page";
 
 export default function ProblemsProvider() {
     const submissions = useSelector((state: RootState) => state.submissions.submissions);
-    const currTags = useSelector((state: RootState) => state.submissions.currentTags);
+    const selectedFiltersByTag = useSelector((state: RootState) => state.submissions.filters.tags);
 
     if (submissions.length === 0) {
       // Render an empty state if no submissions are available
@@ -19,9 +19,14 @@ export default function ProblemsProvider() {
       );
     }
     
+    const filteredSubmissions = selectedFiltersByTag.length > 0
+        ? submissions.filter((submission) => 
+        submission.tags.some((tag) => selectedFiltersByTag.includes(tag)))
+        : submissions;
+
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
-      {submissions.map((submission) => (
+      {filteredSubmissions.map((submission) => (
         <Card
           key={submission.submission_id}
           className="shadow-sm bg-muted/40 hover:bg-muted/50 transition-colors duration-200 overflow-hidden rounded-xl border border-muted-foreground/10"

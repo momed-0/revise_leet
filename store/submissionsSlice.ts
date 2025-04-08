@@ -50,5 +50,5 @@ const submissionsSlice = createSlice({
     },
 });
 
-export const { setSubmissions , updateCurrentTags} = submissionsSlice.actions;
+export const { setSubmissions , updateCurrentTags, addFilterTag, removeFilterTag} = submissionsSlice.actions;
 export default submissionsSlice.reducer;

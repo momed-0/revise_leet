@@ -10,6 +10,8 @@ import EmptyPage from "./empty-page";
 
 export default function ProblemsProvider() {
     const submissions = useSelector((state: RootState) => state.submissions.submissions);
+    const currTags = useSelector((state: RootState) => state.submissions.currentTags);
+
     if (submissions.length === 0) {
       // Render an empty state if no submissions are available
       return (

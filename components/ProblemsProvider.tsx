@@ -23,10 +23,14 @@ export default function ProblemsProvider() {
         ? submissions.filter((submission) => 
         submission.tags.some((tag) => selectedFiltersByTag.includes(tag)))
         : submissions;
-
+    // deduplicate submissions based on 'slug' field
+    // remove duplicates
+    const uniqueSubmissions = Array.from( // map is used to store unique values
+      new Map(filteredSubmissions.map((submission) => [submission.question_slug, submission])).values()
+    )
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
-      {filteredSubmissions.map((submission) => (
+      {uniqueSubmissions.map((submission) => (
         <Card
           key={submission.submission_id}
           className="shadow-sm bg-muted/40 hover:bg-muted/50 transition-colors duration-200 overflow-hidden rounded-xl border border-muted-foreground/10"

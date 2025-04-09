@@ -11,9 +11,9 @@ const SubmissionDetails = () => {
     const { slug } = useParams(); // Get the dynamic route parameter
     const submissions = useSelector((state: RootState) => state.submissions.submissions);
 
-    const submission = submissions.find((sub) => sub.question_slug === slug);
+    const solutions = submissions.filter((sub) => sub.question_slug === slug);
 
-    if (!submission) {
+    if (!solutions) {
         return (
             <div className="w-screen-md mx-auto py-10 px-6">
                 <div className="mb-6 flex justify-start">
@@ -28,21 +28,41 @@ const SubmissionDetails = () => {
 
     return (
         <div className="w-screen-md mx-auto py-10 px-6">
-            <div className="mb-6 flex justify-start">
-                <div className="border border-gray-300 bg-white text-sm rounded shadow-sm hover:border-gray-400 transition">
-                    <SlugDropdown />
-                </div>
-             </div>
-            
-            <h1 className="text-3xl font-bold">{submission.title}</h1>
-            <TagEditor slug={submission.question_slug} initialTags={submission.tags} />
+          <div className="sticky top-0 z-10 bg-white/90 backdrop-blur px-6 py-4 border-b mb-6">
+            <div className="flex justify-start">
+              <div className="border border-gray-300 bg-white text-sm rounded shadow-sm hover:border-gray-400 transition">
+                <SlugDropdown />
+              </div>
+            </div>
+          </div>
+      
+         
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold mb-4">{solutions[0].title}</h1>
+            <TagEditor slug={solutions[0].question_slug} initialTags={solutions[0].tags} />
             <div
-                className="mt-2 text-muted-foreground"
-                dangerouslySetInnerHTML={{ __html: submission.description || "" }}
+              className="mt-4 text-muted-foreground"
+              dangerouslySetInnerHTML={{ __html: solutions[0].description || "" }}
             />
-            <CodeDisplay code={submission.code} language="cpp" />
+          </div>
+      
+         
+          <div>
+            <h2 className="text-2xl font-semibold mb-4">Solutions</h2>
+            <div className="space-y-6">
+              {solutions.map((solution, index) => (
+                <div
+                  key={solution.submission_id}
+                  className="p-4 border border-gray-200 rounded-lg shadow-sm bg-white"
+                >
+                  <h3 className="text-lg font-medium mb-2">Solution {index + 1}</h3>
+                  <CodeDisplay code={solution.code} language="cpp" />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-    );
+      );
 };
 
 export default SubmissionDetails;

@@ -6,22 +6,16 @@ import { RootState } from "@/store/store";
 import CodeDisplay from "@/components/codeDisplay";
 import EmptyPage from "@/components/empty-page";
 import TagEditor from "@/components/TagEditor";
-import SlugDropdown from "@/components/slugDropDown";
 const SubmissionDetails = () => {
     const { slug } = useParams(); // Get the dynamic route parameter
     const submissions = useSelector((state: RootState) => state.submissions.submissions);
 
     const solutions = submissions.filter((sub) => sub.question_slug === slug);
 
-    if (!solutions) {
+    if (!solutions || solutions.length === 0) {
         return (
             <div className="w-screen-md mx-auto py-10 px-6">
-                <div className="mb-6 flex justify-start">
-                    <div className="border border-gray-300 bg-white text-sm rounded shadow-sm hover:border-gray-400 transition">
-                        <SlugDropdown />
-                    </div>
-                </div>
-                <EmptyPage text="No submission found for this question." />;
+                <EmptyPage text="No submission found for this question." />
              </div>
         )
     }

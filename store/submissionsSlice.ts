@@ -21,6 +21,7 @@ type SubmissionsState = {
         tags: string[],
     };
     currentTags: tagStatistics[];
+    count: number;
 };
 
 const initialState: SubmissionsState = {
@@ -29,6 +30,7 @@ const initialState: SubmissionsState = {
         tags: [],
     },
     currentTags: [],
+    count: 0,
 };
 
 const submissionsSlice = createSlice({
@@ -46,9 +48,12 @@ const submissionsSlice = createSlice({
         },
         updateCurrentTags(state, action: PayloadAction<tagStatistics[]>) {
             state.currentTags = action.payload;
+        },
+        updateCount(state, action: PayloadAction<number>) {
+            state.count = action.payload;
         }
     },
 });
 
-export const { setSubmissions , updateCurrentTags, addFilterTag, removeFilterTag} = submissionsSlice.actions;
+export const { setSubmissions , updateCurrentTags, addFilterTag, removeFilterTag, updateCount} = submissionsSlice.actions;
 export default submissionsSlice.reducer;

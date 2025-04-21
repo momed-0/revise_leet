@@ -21,18 +21,18 @@ const SubmissionDetails = () => {
     }
 
     return (
-        <div className="w-screen-md mx-auto py-10 px-6">         
-          <div className="mb-8">
+        <div className="max-w-screen-xl mx-auto py-10 lg:py-16 px-6 xl:px-0 flex flex-col lg:flex-col gap-12">         
+          <div className="mb-8 flex-1">
             <h1 className="text-3xl font-bold mb-4">{solutions[0].title}</h1>
             <TagEditor slug={solutions[0].question_slug} initialTags={solutions[0].tags} />
             <div
-              className="mt-4 text-muted-foreground"
+              className="mt-4 text-muted-foreground whitespace-normal"
               dangerouslySetInnerHTML={{ __html: solutions[0].description || "" }}
             />
           </div>
       
          
-          <div>
+          <div className="flex-1">
             <h2 className="text-2xl font-semibold mb-4">Solutions</h2>
             <div className="space-y-6">
               {solutions.map((solution, index) => (
@@ -41,7 +41,9 @@ const SubmissionDetails = () => {
                   className="p-4 border border-gray-200 rounded-lg shadow-sm bg-white"
                 >
                   <h3 className="text-lg font-medium mb-2">Solution {index + 1}</h3>
-                  <CodeDisplay code={solution.code} language="cpp" />
+                  <div className ="overflow-x-auto max-w-full">
+                    <CodeDisplay code={solution.code} language="cpp" />
+                  </div>
                 </div>
               ))}
             </div>

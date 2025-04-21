@@ -27,16 +27,7 @@ const SubmissionDetails = () => {
     }
 
     return (
-        <div className="w-screen-md mx-auto py-10 px-6">
-          <div className="sticky top-0 z-10 bg-white/90 backdrop-blur px-6 py-4 border-b mb-6">
-            <div className="flex justify-start">
-              <div className="border border-gray-300 bg-white text-sm rounded shadow-sm hover:border-gray-400 transition">
-                <SlugDropdown />
-              </div>
-            </div>
-          </div>
-      
-         
+        <div className="w-screen-md mx-auto py-10 px-6">         
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-4">{solutions[0].title}</h1>
             <TagEditor slug={solutions[0].question_slug} initialTags={solutions[0].tags} />

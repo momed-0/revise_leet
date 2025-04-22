@@ -5,14 +5,21 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/client"
-
+import { useSelector} from "react-redux";
+import { RootState } from "@/store/store";
 
 
 export default function TagEditor({ slug, initialTags = [] }: { slug: string, initialTags: string[] }) {
+    const currTags = useSelector((state: RootState) => state.submissions.currentTags);
     const supabase = createClient()
     const [tags, setTags] = useState<string[]>(Array.isArray(initialTags) ? initialTags.flat() : []);
     const [newTag, setNewTag] = useState("");
     const [showInput, setShowInput] = useState(false);
+    
+    // filter suggestions based on input
+    const filterSuggestions = currTags
+        .filter((item) => item.tag.toLowerCase().includes(newTag.toLowerCase()))
+        .slice(0, 5); // Limit suggestions
 
     const addTag = async () => {
         const tag = newTag.trim();
@@ -69,6 +76,7 @@ export default function TagEditor({ slug, initialTags = [] }: { slug: string, in
               </Badge>
             ))}
             {showInput ? (
+                <div className="relative">
                 <Input
                     value={newTag}
                     autoFocus
@@ -80,10 +88,23 @@ export default function TagEditor({ slug, initialTags = [] }: { slug: string, in
                             setNewTag("");
                         }
                     }}
-                    onBlur={addTag}
+                    onBlur={() => setShowInput(false)}
                     placeholder="Add tag"
                     className="w-28 h-8 text-sm"
                 />
+                {filterSuggestions.length > 0 && (
+                    <div className="absolute top-full left-0 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-md z-10">
+                        {filterSuggestions.map((suggestion) => (
+                            <div
+                                key={suggestion.tag}
+                                className="px-3 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-gray-300"
+                            >
+                                {suggestion.tag}
+                            </div>
+                        ))}
+                    </div>
+                )}
+                </div>
             ) : (
                 <Button
                     variant="ghost"
@@ -95,5 +116,5 @@ export default function TagEditor({ slug, initialTags = [] }: { slug: string, in
                 </Button>
             )}
         </div>
-    )
+    );
 }

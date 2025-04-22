@@ -21,8 +21,7 @@ export default function Header() {
   }
 
   return (
-    <header className="w-full px-4 py-3 border-b flex items-center justify-between bg-white dark:bg-gray-900">
-      <ModeToggle />
+    <header className="relative w-full px-4 py-3 border-b flex items-center justify-between bg-white dark:bg-gray-900">
       <div className="flex items-center gap-2">
         {!hideBackButton && (
            <button onClick={handleBack} className="text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white transition flex items-center">
@@ -34,8 +33,18 @@ export default function Header() {
          
         )}
       </div>
-      {
-          pathname !== "/login" && (
+      {/* <div className="absolute left-1/2 transform -translate-x-1/2">
+        <Image
+          src="/reviser.png"
+          alt="Reviser Logo"
+          width={120}
+          height={40}
+          className="object-contain"
+        />
+      </div> */}
+      <div className= "flex items-center gap-4">
+        <ModeToggle />
+         { pathname !== "/login" && (
             <div
               className="relative flex items-center"
               onMouseEnter={() => setShowSignOut(true)}
@@ -59,6 +68,7 @@ export default function Header() {
             </div>
           ) 
         }
+      </div>
     </header>
   )
 }

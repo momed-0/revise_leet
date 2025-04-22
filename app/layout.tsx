@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import ReduxProvider from "@/components/ReduxProvider";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import { ThemeProvider } from "@/components/theme-provider"
 
 import "./globals.css";
 
@@ -27,13 +28,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Header />
-        <ReduxProvider>{children}</ReduxProvider>
-        <Footer />
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+        >
+          <Header />
+          <ReduxProvider>{children}</ReduxProvider>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

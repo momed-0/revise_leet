@@ -19,8 +19,8 @@ export default function TagsProvider() {
         }
     };
     return (
-        <aside className="sticky top-8 shrink-0 lg:max-w-sm w-full bg-white shadow-md rounded-lg p-4 border border-gray-200">
-          <h3 className="text-xl font-bold tracking-tight mb-4">Tags</h3>
+        <aside className="sticky top-8 shrink-0 lg:max-w-sm w-full shadow-md rounded-lg p-4 border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-700">
+          <h3 className="text-xl font-bold tracking-tight mb-4 text-gray-900 dark:text-gray-100">Tags</h3>
           <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-2">
             {currTags.map((item) => (
                 <button
@@ -29,8 +29,8 @@ export default function TagsProvider() {
                     className={cn(
                         "flex items-center justify-between gap-2 p-3 rounded-md transition-colors duration-200",
                         selectedFiltersByTag.includes(item.tag)
-                            ? "bg-primary/10 text-primary border border-primary"
-                            : "bg-muted text-muted-foreground hover:bg-muted/80"
+                            ? "bg-primary/10 text-primary border border-primary dark:bg-primary/20 dark:text-primary"
+                            : "bg-muted text-muted-foreground hover:bg-primary/10 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
                     )}
                 >
                     <div className="flex items-center gap-3">
@@ -40,7 +40,9 @@ export default function TagsProvider() {
                     <Badge
                         className={cn(
                             "px-1.5 rounded-full",
-                            selectedFiltersByTag.includes(item.tag) ? "bg-primary text-white" : ""
+                            selectedFiltersByTag.includes(item.tag) 
+                            ? "bg-primary text-white dark:bg-primary/80 dark:text-black" 
+                            : "bg-muted text-muted-foreground dark:bg-gray-700 dark:text-gray-300"
                         )}
                     >
                         {item.count}

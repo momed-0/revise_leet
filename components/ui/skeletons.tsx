@@ -3,7 +3,7 @@ export function HomePageSkeleton() {
     <div className={`max-w-screen-xl mx-auto py-10 lg:py-16 px-6 xl:px-0 flex flex-col lg:flex-row gap-12`}>
       {/* Main Content Skeleton */}
       <div className="flex-1">
-        <div className="sticky top-0 z-10 bg-white/90 backdrop-blur px-6 py-4 border-b">
+        <div className="sticky top-0 z-10 backdrop-blur px-6 py-4 border-b">
           <div className="max-w-screen-xl mx-auto">
             <div className="h-8 w-1/3 bg-gray-200 rounded mb-4 animate-pulse"></div>
             <div className="flex flex-wrap gap-4">

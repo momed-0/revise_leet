@@ -41,7 +41,7 @@ const HomePage = () => {
       <div className="max-w-screen-xl mx-auto py-10 lg:py-16 px-6 xl:px-0 flex flex-col lg:flex-row gap-12">
         {/* Main Content */}
         <div className="flex-1">
-          <div className="sticky top-0 z-10 bg-white/90 backdrop-blur px-6 py-4 border-b">
+          <div className="sticky top-0 z-10 backdrop-blur px-6 py-4 border-b">
             <div className="max-w-screen-xl mx-auto">
               <h2 className="text-2xl font-semibold mb-2">Problems</h2>
               <div className="flex flex-wrap gap-4">

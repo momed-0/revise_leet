@@ -41,7 +41,7 @@ export default function ProblemsProvider() {
     
           <CardContent className="p-4 flex flex-col">
             <div className="flex flex-wrap items-center gap-2 mb-2">
-              {submission.tags && submission.tags.flat().map(tag => (
+              {submission.tags && submission.tags.map(tag => (
                   <Badge key={tag} className="bg-primary/10 text-primary">{tag}</Badge>
               ))}
             </div>

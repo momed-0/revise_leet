@@ -6,9 +6,9 @@ import { useRouter } from "next/navigation";
 import { fetchTagsBySlug,fetchQuestionsAll ,fetchSubmissionsBySlug} from "@/app/api/content";
 
 type Question = {
-    slug: string
-    title: string
-    description: string
+    Slug: string
+    Title: string
+    Description: string
   }
 
 export default function SlugDropdown() {
@@ -34,7 +34,7 @@ export default function SlugDropdown() {
         console.error("Error fetching:", error)
       } else {
         // sort the questions in ascending order
-        const sortedQuestions = (data as Question[]).sort((a, b) => a.title.localeCompare(b.title));
+        const sortedQuestions = (data.questions as Question[]).sort((a, b) => a.Title.localeCompare(b.Title));
         setQuestions(sortedQuestions)
         setFetched(true)
       }
@@ -47,16 +47,16 @@ export default function SlugDropdown() {
             console.error("Error trying to fetch solution:", error)
         } else {
             let flattenedData = await Promise.all(
-              (data ?? []).map(async (item: any) => {
-                const tagsData = await fetchTags(item.leetcode_questions?.slug);
+              (data.submissions ?? []).map(async (item: any) => {
+                const tagsData = await fetchTags(item.Submission?.Question_Slug);
                 return {
-                  submission_id: item.submission_id,
-                  code: item.code,
-                  question_slug: item.leetcode_questions?.slug,
+                  submission_id: item.Submission?.Submission_ID,
+                  code: item.Submission?.Code,
+                  question_slug: item.Submission?.Question_Slug,
                   tags: tagsData,
-                  submitted_at: item.submitted_at,
-                  title: item.leetcode_questions?.title,
-                  description: item.leetcode_questions?.description,
+                  submitted_at: item.Submission?.Submitted_At,
+                  title: item.Question?.Title,
+                  description: item.Question?.Description,
                 };
               })
             );
@@ -71,8 +71,8 @@ export default function SlugDropdown() {
         </SelectTrigger>
         <SelectContent>
           {questions.map((item) => (
-            <SelectItem key={item.slug} value={item.slug}>
-              {item.title}
+            <SelectItem key={item.Slug} value={item.Slug}>
+              {item.Title}
             </SelectItem>
           ))}
         </SelectContent>

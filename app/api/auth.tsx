@@ -14,4 +14,5 @@ export async function login(username: string, password: string) {
             console.error("API failed:", error);
         }
     }
+    return {data: {}, error: null}
 }

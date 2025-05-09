@@ -1,38 +1,21 @@
-// import { LoginForm } from "@/components/login-form"
-
-// export default function Page() {
-//   return (
-//     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-//       <div className="w-full max-w-sm">
-//         <LoginForm />
-//       </div>
-//     </div>
-//   )
-// }
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {login} from "@/app/api/auth";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const supabase = createClient();
 
   const handleLogin = async () => {
     setError(null);
 
-    const { data, error } = await supabase
-      .from("users")
-      .select("*")
-      .eq("username", username)
-      .eq("password", password)
-      .single();
+    const { data, error } = await login(username, password);
 
     if (error || !data) {
       setError("Invalid username or password");

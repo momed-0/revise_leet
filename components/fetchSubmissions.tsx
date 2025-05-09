@@ -1,13 +1,9 @@
-import { createClient } from '@/utils/supabase/client';
 import { updateCurrentTags, updateCount, setSubmissions} from "@/store/submissionsSlice";
+import { fetchTagsBySlug, fetchQuestionsCount, fetchSubmissionsForDay, fetchSubmissionsRange } from '@/app/api/content';
 
-const supabase = createClient();
 
 const fetchTags = async (slug: string) => {
-  const {data, error} = await supabase
-    .from('question_tags')
-    .select('tags')
-    .eq('slug', slug)
+  const {data, error} = await fetchTagsBySlug(slug);
     if( error) {
       console.error('Error trying to fetch tags:',error)
       return [];
@@ -39,33 +35,18 @@ const flattenData = async (data: any) => {
   return { currentTags, flattenedData };
 }
 
-export async function fetchSubmissionsCount(dispatch: any) {
-  const {data, error,count} = await supabase
-    .from('leetcode_questions')
-    .select('*', { count: 'exact', head: true })
+export async function FetchQuestionsCount(dispatch: any) {
+  const {data, error,count} = await fetchQuestionsCount();
   if (error) {
-    console.error('Supabase error:', error.message);
+    console.error('API error:', error.message);
   }
   dispatch(updateCount(count ? count : 0));
 }
 
-export async function fetchSubmissionsRange(from: number, to:number, dispatch: any) {
-  const {data, error} = await supabase
-    .from('leetcode_submissions')
-    .select(`
-      submission_id,
-      code,
-      submitted_at,
-      leetcode_questions (
-        slug,
-        title,
-        description
-      )
-    `)
-    .range(from, to)
-    .order('submitted_at', { ascending: false });
+export async function FetchSubmissionsRange(from: number, to:number, dispatch: any) {
+  const {data, error} = await fetchSubmissionsRange(from, to);
   if (error) {
-    console.error('Supabase error:', error.message);
+    console.error('API error:', error.message);
   }
   // flatten data structure
   const { currentTags, flattenedData } = await flattenData(data);
@@ -74,28 +55,14 @@ export async function fetchSubmissionsRange(from: number, to:number, dispatch: a
   dispatch(setSubmissions(flattenedData));
 } 
 
-export async function fetchSubmissionsForDay(targetDate: string, dispatch: any) {
+export async function FetchSubmissionsForDay(targetDate: string, dispatch: any) {
   const startOfDay = `${targetDate}T00:00:00`;
   const endOfDay = `${targetDate}T23:59:59`;
 
-  const { data, error , count} = await supabase
-    .from('leetcode_submissions')
-    .select(`
-      submission_id,
-      code,
-      submitted_at,
-      leetcode_questions (
-        slug,
-        title,
-        description
-      )
-    `, { count: 'exact' })
-    .gte('submitted_at', startOfDay)
-    .lte('submitted_at', endOfDay)
-    .order('submitted_at', { ascending: false });
+  const { data, error , count} = await fetchSubmissionsForDay(startOfDay, endOfDay);
 
   if (error) {
-    console.error('Supabase error:', error.message);
+    console.error('API error:', error.message);
     return [];
   }
   // flatten data structure

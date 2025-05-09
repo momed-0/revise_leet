@@ -2,9 +2,8 @@ import { useState } from "react"
 import { useDispatch } from "react-redux";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { setSubmissions } from "@/store/submissionsSlice";
-import { createClient } from "@/utils/supabase/client"
 import { useRouter } from "next/navigation";
-
+import { fetchTagsBySlug,fetchQuestionsAll ,fetchSubmissionsBySlug} from "@/app/api/content";
 
 type Question = {
     slug: string
@@ -19,12 +18,8 @@ export default function SlugDropdown() {
     const [loading, setLoading] = useState(false)
     const [fetched, setFetched] = useState(false)
 
-    const supabase = createClient()
     const fetchTags = async (slug: string) => {
-      const {data, error} = await supabase
-        .from('question_tags')
-        .select('tags')
-        .eq('slug', slug)
+      const {data, error} = await fetchTagsBySlug(slug)
         if( error) {
           console.error('Error trying to fetch tags:',error)
         }
@@ -33,9 +28,7 @@ export default function SlugDropdown() {
     const fetchItems = async () => {
       if (fetched || loading) return
       setLoading(true)
-      const { data, error } = await supabase
-        .from("leetcode_questions")
-        .select("slug, title, description")
+      const { data, error } = await fetchQuestionsAll()
   
       if (error) {
         console.error("Error fetching:", error)
@@ -49,19 +42,7 @@ export default function SlugDropdown() {
       setLoading(false)
     }
     const handleSelect = async (value: string) => {
-        const { data, error } = await supabase
-        .from('leetcode_submissions')
-        .select(`
-          submission_id,
-          code,
-          submitted_at,
-          leetcode_questions (
-            slug,
-            title,
-            description
-          )
-        `)
-        .eq('question_slug', value)
+        const { data, error } = await fetchSubmissionsBySlug(value)
         if (error) {
             console.error("Error trying to fetch solution:", error)
         } else {

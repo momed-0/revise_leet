@@ -4,14 +4,13 @@ import { useState} from "react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { createClient } from "@/utils/supabase/client"
 import { useSelector} from "react-redux";
 import { RootState } from "@/store/store";
+import { upsertTags,deleteTags } from "@/app/api/content";
 
 
 export default function TagEditor({ slug, initialTags = [] }: { slug: string, initialTags: string[] }) {
     const currTags = useSelector((state: RootState) => state.submissions.currentTags);
-    const supabase = createClient()
     const [tags, setTags] = useState<string[]>(Array.isArray(initialTags) ? initialTags.flat() : []);
     const [newTag, setNewTag] = useState("");
     const [showInput, setShowInput] = useState(false);
@@ -27,9 +26,7 @@ export default function TagEditor({ slug, initialTags = [] }: { slug: string, in
             const updatedTags = [...tags, tag];
             setTags(updatedTags)
             // Update if exists or else insert
-            const { error } = await supabase
-                .from('question_tags')
-                .upsert({'slug': slug, 'tags': updatedTags})
+            const { error } = await upsertTags(slug, updatedTags)
             if (error) {
                 console.error("Error trying to update tags: ", error)
             }
@@ -43,19 +40,13 @@ export default function TagEditor({ slug, initialTags = [] }: { slug: string, in
         setTags(updatedTags)
         if (updatedTags.length === 0) { 
             // if no tags ,remove the entry from db
-            const {error} = await supabase
-            .from('question_tags')
-            .delete()
-            .eq('slug', slug)
+            const {error} = await deleteTags(slug)
             if (error) {
                 console.error("Error trying to delete tags: ", error)
             }
         } else {
             // If therea re still tags update the db
-            const { error } = await supabase
-            .from('question_tags')
-            .update({'tags': updatedTags})
-            .eq('slug', slug)
+            const { error } = await upsertTags(slug, updatedTags)
             if (error) {
                 console.error("Error trying to update tags: ", error)
             }

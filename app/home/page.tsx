@@ -6,7 +6,7 @@ import { CalendarOff } from 'lucide-react';
 import { useDispatch } from "react-redux";
 import ProblemsProvider from "@/components/ProblemsProvider";
 import TagsProvider from "@/components/TagsProvider";
-import { fetchSubmissionsForDay, fetchSubmissionsCount, fetchSubmissionsRange } from "@/components/fetchSubmissions";
+import { FetchSubmissionsForDay, FetchQuestionsCount, FetchSubmissionsRange } from "@/components/fetchSubmissions";
 import DatePicker from "@/components/ui/datePicker";
 import SlugDropdown from "@/components/slugDropDown";
 import PaginationProvider from "@/components/pagination";
@@ -24,7 +24,7 @@ const HomePage = () => {
       if(date) {
         setSelectedDate(date);
         const formattedDate = date.toISOString().split("T")[0];
-        fetchSubmissionsForDay(formattedDate, dispatch);
+        FetchSubmissionsForDay(formattedDate, dispatch);
         setCurrPage(1); // reset to first page
       }
     }
@@ -32,8 +32,8 @@ const HomePage = () => {
       if (!selectedDate) { // update pagination if no date selected
         // fetch data for this particular page
         const {start, end} = findRange(currPage);
-        fetchSubmissionsRange(start, end, dispatch)
-        fetchSubmissionsCount(dispatch);
+        FetchSubmissionsRange(start, end, dispatch)
+        FetchQuestionsCount(dispatch);
       } 
     }, [currPage,selectedDate, dispatch]);
 

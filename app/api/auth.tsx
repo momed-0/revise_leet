@@ -1,15 +1,17 @@
 import { createClient } from "@/utils/supabase/client";
-
+import { UseServiceAPI } from "./go";
+import { isGoServiceHealthy } from "./health";
 
 const supabase = createClient()
 
 export async function login(username: string, password: string) {
-    const { data, error } = await supabase
-        .from("users")
-        .select("*")
-        .eq("username", username)
-        .eq("password", password)
-        .single();
-    
-    return { data ,error};
+    if(isGoServiceHealthy) {
+        try {
+            const {data, error} = await UseServiceAPI("/auth/login", "POST", {Username: username, Password: password});
+            return {data, error};
+
+        } catch (error) {
+            console.error("API failed:", error);
+        }
+    }
 }

@@ -1,95 +1,112 @@
 import { createClient } from "@/utils/supabase/client";
-
+import { isGoServiceHealthy } from "./health";
+import { UseServiceAPI } from "./go";
 
 const supabase = createClient()
 
 export async function upsertTags(slug: string, tags: string[]) {
-    const { error } = await supabase
-        .from('question_tags')
-        .upsert({'slug': slug, 'tags': tags})
-    return {error}
+    if(isGoServiceHealthy) {
+        try {
+            const {data, error } = await UseServiceAPI("/api/content/tags/editor/upsert", "POST", {Slug: slug, Tags: tags});
+            return {data, error};
+    
+        } catch (error) {
+            console.error("API failed:", error);
+        }
+    }
+    return {data: {}, error: null}
 }
 
 export async function deleteTags(slug: string) {
-    const { error } = await supabase
-        .from('question_tags')
-        .delete()
-        .eq('slug', slug)
-    return {error}
+    if(isGoServiceHealthy) {
+        try {
+            const {data, error } = await UseServiceAPI(`/api/content/tags/editor?slug=${slug}`, "DELETE");
+            return {data, error};
+    
+        } catch (error) {
+            console.error("API failed:", error);
+        }
+    }
+    return {data: {}, error: null}
 }
 
 export async function fetchTagsBySlug(slug: string) {
-    const { data, error } = await supabase
-        .from('question_tags')
-        .select('tags')
-        .eq('slug', slug)
-    return {data, error}
+    if(isGoServiceHealthy) {
+        try {
+            const {data, error } = await UseServiceAPI(`/api/content/tags?slug=${slug}`, "GET");
+            return {data, error};
+    
+        } catch (error) {
+            console.error("API failed:", error);
+        }
+    }
+    return {data: {}, error: null}
 }
 
 export async function fetchQuestionsCount() {
-    const {data, error,count} = await supabase
-        .from('leetcode_questions')
-        .select('*', { count: 'exact', head: true })
-    return {data, error, count}
+    if(isGoServiceHealthy) {
+        try {
+            const {data, error } = await UseServiceAPI(`/api/content/questions/count`, "GET");
+            const count = data?.count || 0;
+            return {data, error, count};
+    
+        } catch (error) {
+            console.error("API failed:", error);
+        }
+    }
+    return {data: {}, error: null,count : 0}
 }
 
 export async function fetchSubmissionsRange(from: number, to:number) {
-    const {data, error} = await supabase
-        .from('leetcode_submissions')
-        .select(`
-            submission_id,
-            code,
-            submitted_at,
-            leetcode_questions (
-                slug,
-                title,
-                description
-            )
-        `)
-        .range(from, to)
-        .order('submitted_at', { ascending: false });
-    return {data, error}
+    if(isGoServiceHealthy) {
+        try {
+            const {data, error } = await UseServiceAPI(`/api/content/pages?from=${from}&to=${to}`, "GET");
+            return {data, error};
+    
+        } catch (error) {
+            console.error("API failed:", error);
+        }
+    }
+    return {data: {}, error: null}
 }
 
-export async function fetchSubmissionsForDay(startOfDay: string, endOfDay: string) {
-    const {data, error,count} = await supabase
-        .from('leetcode_submissions')
-        .select(`
-            submission_id,
-            code,
-            submitted_at,
-            leetcode_questions (
-                slug,
-                title,
-                description
-            )
-        `, { count: 'exact' })
-        .gte('submitted_at', startOfDay)
-        .lte('submitted_at', endOfDay)
-        .order('submitted_at', { ascending: false });
-    return {data, error, count}
+export async function fetchSubmissionsForDay(date: string) {
+    const startOfDay = `${date}T00:00:00`;
+    const endOfDay = `${date}T23:59:59`;
+    if(isGoServiceHealthy) {
+        try {
+            const {data, error } = await UseServiceAPI(`/api/content/submissions?date=${date}`, "GET");
+            return {data, error, count: data?.count || 0};
+    
+        } catch (error) {
+            console.error("API failed:", error);
+        }
+    }
+    return {data: {}, error: null, count: 0}
 }
 
 export async function fetchSubmissionsBySlug(slug: string) {
-    const {data, error} = await supabase
-        .from('leetcode_submissions')
-        .select(`
-            submission_id,
-            code,
-            submitted_at,
-            leetcode_questions (
-                slug,
-                title,
-                description
-            )
-        `)
-        .eq('question_slug', slug)
-    return {data, error}
+    if(isGoServiceHealthy) {
+        try {
+            const {data, error } = await UseServiceAPI(`/api/content/submissions/${slug}`, "GET");
+            return {data, error};
+    
+        } catch (error) {
+            console.error("API failed:", error);
+        }
+    }
+    return {data: {}, error: null}
 }
 
 export async function fetchQuestionsAll() {
-    const { data, error } = await supabase
-        .from("leetcode_questions")
-        .select("slug, title, description")
-    return {data, error}
+    if(isGoServiceHealthy) {
+        try {
+            const {data, error } = await UseServiceAPI(`/api/content/questions/all`, "GET");
+            return {data, error};
+    
+        } catch (error) {
+            console.error("API failed:", error);
+        }
+    }
+    return {data: {}, error: null}
 }

@@ -53,7 +53,7 @@ export default function SlugDropdown() {
                   submission_id: item.submission_id,
                   code: item.code,
                   question_slug: item.leetcode_questions?.slug,
-                  tags: tagsData?.map(tag => tag.tags) || [],
+                  tags: tagsData,
                   submitted_at: item.submitted_at,
                   title: item.leetcode_questions?.title,
                   description: item.leetcode_questions?.description,

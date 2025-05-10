@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation"
 import * as React from "react"
 import Image from "next/image"
 import { ModeToggle } from "./ui/themeToggle"
+import { logout } from "@/app/api/auth"
 
 export default function Header() {
   const pathname = usePathname()
@@ -16,8 +17,16 @@ export default function Header() {
     }
   }
 
-  const handleSignOut = () => {
-      // Todo: Implement sign out logic
+  const handleSignOut = async () => {
+      const {error} = await logout()
+      if(error == null) {
+        // Save authentication state in cookies
+        document.cookie = "auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+        router.push("/login")
+      } else {
+        console.error("Failed to logout")
+      }
+
   }
 
   return (
@@ -33,15 +42,6 @@ export default function Header() {
          
         )}
       </div>
-      {/* <div className="absolute left-1/2 transform -translate-x-1/2">
-        <Image
-          src="/reviser.png"
-          alt="Reviser Logo"
-          width={120}
-          height={40}
-          className="object-contain"
-        />
-      </div> */}
       <div className= "flex items-center gap-4">
         <ModeToggle />
          { pathname !== "/login" && (

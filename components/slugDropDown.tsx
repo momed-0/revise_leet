@@ -53,7 +53,7 @@ export default function SlugDropdown() {
                   submission_id: item.Submission?.Submission_ID,
                   code: item.Submission?.Code,
                   question_slug: item.Submission?.Question_Slug,
-                  tags: tagsData,
+                  tags: tagsData.tags,
                   submitted_at: item.Submission?.Submitted_At,
                   title: item.Question?.Title,
                   description: item.Question?.Description,

@@ -10,6 +10,7 @@ import { FetchSubmissionsForDay, FetchQuestionsCount, FetchSubmissionsRange } fr
 import DatePicker from "@/components/ui/datePicker";
 import SlugDropdown from "@/components/slugDropDown";
 import PaginationProvider from "@/components/pagination";
+import { HomePageSkeleton } from "@/components/ui/skeletons";
 
 const findRange = (page: number) => {
     const start = (page - 1) * 10;
@@ -20,23 +21,36 @@ const HomePage = () => {
     const dispatch = useDispatch();
     const [currPage, setCurrPage] = useState(1); // current page
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined); // selected date
+    const [loading, setLoading] = useState(false); // loading state
+    
     const dateListener = (date : Date) => {
       if(date) {
         setSelectedDate(date);
         const formattedDate = date.toISOString().split("T")[0];
-        FetchSubmissionsForDay(formattedDate, dispatch);
+        setLoading(true); // Show loading skeleton
+        FetchSubmissionsForDay(formattedDate, dispatch).finally(() => {
+          setLoading(false); // Hide loading skeleton
+        });
         setCurrPage(1); // reset to first page
       }
     }
     useEffect(() => {
       if (!selectedDate) { // update pagination if no date selected
         // fetch data for this particular page
+        setLoading(true);
         const {start, end} = findRange(currPage);
-        FetchSubmissionsRange(start, end, dispatch)
-        FetchQuestionsCount(dispatch);
+        Promise.all([
+          FetchSubmissionsRange(start, end, dispatch),
+          FetchQuestionsCount(dispatch),
+        ]).finally(() => {
+          setLoading(false); // Hide loading skeleton
+        });
       } 
     }, [currPage,selectedDate, dispatch]);
-
+    // Show skeleton while loading
+    if (loading) {
+      return <HomePageSkeleton />;
+    }
     return (
       <div className="max-w-screen-xl mx-auto py-10 lg:py-16 px-6 xl:px-0 flex flex-col lg:flex-row gap-12">
         {/* Main Content */}
@@ -45,7 +59,7 @@ const HomePage = () => {
             <div className="max-w-screen-xl mx-auto">
               <h2 className="text-2xl font-semibold mb-2">Problems</h2>
               <div className="flex flex-wrap gap-4">
-                <SlugDropdown />
+                <SlugDropdown loading={loading} setLoading={setLoading}/>
                 <DatePicker selectedDate={selectedDate} onDateChange={dateListener} />
                 {selectedDate &&
                   <Button variant="outline"

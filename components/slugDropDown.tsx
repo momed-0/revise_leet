@@ -11,11 +11,11 @@ type Question = {
     Description: string
   }
 
-export default function SlugDropdown() {
+export default function SlugDropdown({loading, setLoading}: { loading: boolean; setLoading: (value: boolean) => void }) {
     const dispatch = useDispatch();
     const router = useRouter();
     const [questions, setQuestions] = useState<Question[]>([])
-    const [loading, setLoading] = useState(false)
+    const [slugLoading, setSlugLoading] = useState(false)
     const [fetched, setFetched] = useState(false)
 
     const fetchTags = async (slug: string) => {
@@ -27,7 +27,7 @@ export default function SlugDropdown() {
     }
     const fetchItems = async () => {
       if (fetched || loading) return
-      setLoading(true)
+      setSlugLoading(true)
       const { data, error } = await fetchQuestionsAll()
   
       if (error) {
@@ -39,12 +39,14 @@ export default function SlugDropdown() {
         setFetched(true)
       }
   
-      setLoading(false)
+      setSlugLoading(false)
     }
     const handleSelect = async (value: string) => {
+        setLoading(true);
         const { data, error } = await fetchSubmissionsBySlug(value)
         if (error) {
             console.error("Error trying to fetch solution:", error)
+            setLoading(false);
         } else {
             let flattenedData = await Promise.all(
               (data.submissions ?? []).map(async (item: any) => {
@@ -62,6 +64,7 @@ export default function SlugDropdown() {
             );
             dispatch(setSubmissions(flattenedData)); // changed the context to this elected data
             router.push(`/submissions/${flattenedData[0]?.question_slug}`); // Redirect to submission details
+            setLoading(false);
         }
     }
     return (

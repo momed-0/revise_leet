@@ -17,11 +17,11 @@ export default function TagEditor({ slug, initialTags = [] }: { slug: string, in
     
     // filter suggestions based on input
     const filterSuggestions = currTags
-        .filter((item) => item.tag.toLowerCase().includes(newTag.toLowerCase()))
-        .slice(0, 5); // Limit suggestions
+        .filter((item) => item.tag.toLowerCase().includes(newTag.toLowerCase()) && !tags.includes(item.tag))
+        
 
-    const addTag = async () => {
-        const tag = newTag.trim();
+    const addTag = async (tagFromSuggestion?: string) => {
+        const tag = (tagFromSuggestion ?? newTag).trim();
         if(tag && !tags.includes(tag)) {
             const updatedTags = [...tags, tag];
             setTags(updatedTags)
@@ -88,6 +88,7 @@ export default function TagEditor({ slug, initialTags = [] }: { slug: string, in
                         {filterSuggestions.map((suggestion) => (
                             <div
                                 key={suggestion.tag}
+                                onMouseDown={() => addTag(suggestion.tag)}
                                 className="px-3 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-900 dark:text-gray-300"
                             >
                                 {suggestion.tag}

@@ -1,71 +1,57 @@
-import { createClient } from "@/utils/supabase/client";
-import { isGoServiceHealthy } from "./health";
 import { UseServiceAPI } from "./go";
 
-const supabase = createClient()
 
 export async function upsertTags(slug: string, tags: string[]) {
-    if(isGoServiceHealthy) {
-        try {
-            const {data, error } = await UseServiceAPI("/api/content/tags/editor/upsert", "POST", {Slug: slug, Tags: tags});
-            return {data, error};
+    try {
+        const {data, error } = await UseServiceAPI("/api/content/tags/editor/upsert", "POST", {Slug: slug, Tags: tags});
+        return {data, error};
     
-        } catch (error) {
-            console.error("API failed:", error);
-        }
+    } catch (error) {
+        console.error("API failed:", error);
     }
+
     return {data: {}, error: null}
 }
 
 export async function deleteTags(slug: string) {
-    if(isGoServiceHealthy) {
-        try {
-            const {data, error } = await UseServiceAPI(`/api/content/tags/editor?slug=${slug}`, "DELETE");
-            return {data, error};
+    try {
+        const {data, error } = await UseServiceAPI(`/api/content/tags/editor?slug=${slug}`, "DELETE");
+        return {data, error};
     
-        } catch (error) {
-            console.error("API failed:", error);
-        }
+    } catch (error) {
+        console.error("API failed:", error);
     }
     return {data: {}, error: null}
 }
 
 export async function fetchTagsBySlug(slug: string) {
-    if(isGoServiceHealthy) {
-        try {
-            const {data, error } = await UseServiceAPI(`/api/content/tags?slug=${slug}`, "GET");
-            return {data, error};
+    try {
+        const {data, error } = await UseServiceAPI(`/api/content/tags?slug=${slug}`, "GET");
+        return {data, error};
     
-        } catch (error) {
-            console.error("API failed:", error);
-        }
+    } catch (error) {
+        console.error("API failed:", error);
     }
     return {data: {}, error: null}
 }
 
 export async function fetchQuestionsCount() {
-    if(isGoServiceHealthy) {
-        try {
-            const {data, error } = await UseServiceAPI(`/api/content/questions/count`, "GET");
-            const count = data?.count || 0;
-            return {data, error, count};
-    
-        } catch (error) {
-            console.error("API failed:", error);
-        }
+    try {
+        const {data, error } = await UseServiceAPI(`/api/content/questions/count`, "GET");
+        const count = data?.count || 0;
+        return {data, error, count};
+    } catch (error) {
+        console.error("API failed:", error);
     }
     return {data: {}, error: null,count : 0}
 }
 
 export async function fetchSubmissionsRange(from: number, to:number) {
-    if(isGoServiceHealthy) {
-        try {
-            const {data, error } = await UseServiceAPI(`/api/content/pages?from=${from}&to=${to}`, "GET");
-            return {data, error};
-    
-        } catch (error) {
-            console.error("API failed:", error);
-        }
+    try {
+        const {data, error } = await UseServiceAPI(`/api/content/pages?from=${from}&to=${to}`, "GET");
+        return {data, error};
+    } catch (error) {
+        console.error("API failed:", error);
     }
     return {data: {}, error: null}
 }
@@ -73,40 +59,34 @@ export async function fetchSubmissionsRange(from: number, to:number) {
 export async function fetchSubmissionsForDay(date: string) {
     const startOfDay = `${date}T00:00:00`;
     const endOfDay = `${date}T23:59:59`;
-    if(isGoServiceHealthy) {
-        try {
-            const {data, error } = await UseServiceAPI(`/api/content/submissions?date=${date}`, "GET");
-            return {data, error, count: data?.count || 0};
-    
-        } catch (error) {
-            console.error("API failed:", error);
-        }
+    try {
+        const {data, error } = await UseServiceAPI(`/api/content/submissions?date=${date}`, "GET");
+        return {data, error, count: data?.count || 0};
+    } catch (error) {
+        console.error("API failed:", error);
     }
     return {data: {}, error: null, count: 0}
 }
 
 export async function fetchSubmissionsBySlug(slug: string) {
-    if(isGoServiceHealthy) {
-        try {
-            const {data, error } = await UseServiceAPI(`/api/content/submissions/${slug}`, "GET");
-            return {data, error};
-    
-        } catch (error) {
-            console.error("API failed:", error);
-        }
+    try {
+        const { data, error } = await UseServiceAPI(`/api/content/submissions/${slug}`, "GET");
+        return { data, error };
+
+    } catch (error) {
+        console.error("API failed:", error);
     }
     return {data: {}, error: null}
 }
 
 export async function fetchQuestionsAll() {
-    if(isGoServiceHealthy) {
-        try {
-            const {data, error } = await UseServiceAPI(`/api/content/questions/all`, "GET");
-            return {data, error};
-    
-        } catch (error) {
-            console.error("API failed:", error);
-        }
+    try {
+        const { data, error } = await UseServiceAPI(`/api/content/questions/all`, "GET");
+        return { data, error };
+
+    } catch (error) {
+        console.error("API failed:", error);
     }
-    return {data: {}, error: null}
+
+    return { data: {}, error: null }
 }
